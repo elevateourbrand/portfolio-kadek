@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Kadek Yahya</title>
+<style>
+:root{
+  --bg:#050510;--bg2:#0d0d1f;--card:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --blue:#1a56db;--purple:#7c3aed;--gold:#f59e0b;
+  --text:#f8fafc;--text2:#94a3b8;--text3:#64748b;
+  --g1:linear-gradient(135deg,#1a56db,#7c3aed);
+  --success:#22c55e;--danger:#ef4444;--warn:#f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--g1);border-radius:3px}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.login-box{width:100%;max-width:420px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2.5rem}
+.login-logo{font-size:1.6rem;font-weight:900;background:var(--g1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.4rem}
+.login-sub{color:var(--text3);font-size:.85rem;margin-bottom:2rem}
+.login-box label{display:block;font-size:.78rem;font-weight:600;color:var(--text2);margin-bottom:.4rem;letter-spacing:.05em;text-transform:uppercase}
+.login-box input{width:100%;padding:.75rem 1rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.9rem;outline:none;transition:border .2s}
+.login-box input:focus{border-color:rgba(26,86,219,.5)}
+.login-hint{font-size:.73rem;color:var(--text3);margin-top:.5rem;margin-bottom:1.5rem}
+.login-hint a{color:#3b82f6;text-decoration:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem 1.5rem;border-radius:10px;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .2s;border:none;text-decoration:none}
+.btn-primary{background:var(--g1);color:#fff;width:100%}
+.btn-primary:hover{opacity:.85;transform:translateY(-1px)}
+.btn-sm{padding:.45rem 1rem;font-size:.8rem;border-radius:8px}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:rgba(26,86,219,.4);color:var(--text)}
+.btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-success{background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.3)}
+
+/* LAYOUT */
+.hidden{display:none!important}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{font-size:1.2rem;font-weight:900;background:var(--g1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.2rem}
+.sidebar-domain{font-size:.72rem;color:var(--text3);margin-bottom:2rem}
+.nav-group{margin-bottom:1.5rem}
+.nav-label{font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem;padding:0 .5rem}
+.nav-item{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;border-radius:8px;color:var(--text2);cursor:pointer;font-size:.87rem;transition:all .2s;margin-bottom:.15rem;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.nav-item.active{background:rgba(26,86,219,.15);color:#3b82f6;font-weight:600}
+.nav-item .icon{font-size:1rem;width:20px;text-align:center}
+.sidebar-footer{margin-top:auto;padding-top:1rem;border-top:1px solid var(--border)}
+.user-chip{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--g1);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:.8rem;color:var(--text2)}
+
+/* MAIN */
+.main{padding:2rem;overflow-y:auto}
+.page-header{margin-bottom:2rem}
+.page-title{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-sub{color:var(--text3);font-size:.85rem;margin-top:.25rem}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
+.card-title{font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem}
+
+/* FORM */
+.form-group{margin-bottom:1.2rem}
+.form-group label{display:block;font-size:.78rem;font-weight:600;color:var(--text2);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:.7rem 1rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.9rem;outline:none;transition:border .2s;font-family:inherit}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:rgba(26,86,219,.5)}
+.form-group textarea{min-height:100px;resize:vertical}
+.form-group select option{background:var(--bg2)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-hint{font-size:.73rem;color:var(--text3);margin-top:.4rem}
+
+/* PHOTO PREVIEW */
+.photo-preview{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid var(--border);display:block;margin-bottom:.75rem}
+.photo-preview-placeholder{width:120px;height:120px;border-radius:50%;background:rgba(124,58,237,.15);border:3px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:.75rem}
+.upload-area{border:2px dashed var(--border);border-radius:12px;padding:1.5rem;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.upload-area:hover{border-color:rgba(26,86,219,.4);background:rgba(26,86,219,.04)}
+.upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-label{font-size:.85rem;color:var(--text2);margin-top:.4rem}
+
+/* BLOG LIST */
+.blog-item{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;margin-bottom:.75rem;transition:all .2s}
+.blog-item:hover{border-color:rgba(26,86,219,.3)}
+.blog-item-left{display:flex;align-items:center;gap:.9rem}
+.blog-emoji{font-size:1.6rem;width:44px;height:44px;background:rgba(26,86,219,.1);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.blog-title{font-weight:600;font-size:.9rem}
+.blog-slug{font-size:.73rem;color:var(--text3);margin-top:.15rem}
+.blog-actions{display:flex;gap:.5rem}
+
+/* NEW BLOG FORM */
+.stat-row{display:grid;grid-template-columns:1fr 2fr;gap:.75rem;margin-bottom:.5rem;align-items:center}
+.section-divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+.tag{display:inline-block;font-size:.68rem;font-weight:600;padding:3px 10px;border-radius:100px;background:rgba(26,86,219,.12);color:#3b82f6;border:1px solid rgba(26,86,219,.25)}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem}
+.toast{padding:.75rem 1.2rem;border-radius:10px;font-size:.85rem;font-weight:500;animation:toastIn .3s ease;max-width:320px}
+.toast.success{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:#4ade80}
+.toast.error{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#f87171}
+.toast.info{background:rgba(26,86,219,.15);border:1px solid rgba(26,86,219,.3);color:#60a5fa}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* LOADING */
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay{position:fixed;inset:0;background:rgba(5,5,16,.7);backdrop-filter:blur(4px);z-index:9998;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.loading-overlay p{color:var(--text2);font-size:.9rem}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:900;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;padding:2rem}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.modal-title{font-size:1.1rem;font-weight:700}
+.modal-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:1.2rem;padding:.25rem;transition:color .2s}
+.modal-close:hover{color:var(--text)}
+
+@media(max-width:768px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">kadekyahya.com</div>
+    <div class="login-sub">Admin Panel — Masuk untuk mengelola konten</div>
+    <label>GitHub Personal Access Token</label>
+    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+    <div class="login-hint">
+      Buat token di <a href="https://github.com/settings/tokens" target="_blank">GitHub → Settings → Developer Settings → Tokens (classic)</a>. Centang scope <strong>repo</strong>.
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">
+      <span id="loginBtnText">Masuk</span>
+    </button>
+    <div id="loginError" style="margin-top:.75rem;color:#f87171;font-size:.8rem;display:none"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app hidden" id="appPage">
+  <aside class="sidebar">
+    <div class="sidebar-logo">Admin Panel</div>
+    <div class="sidebar-domain">kadekyahya.com</div>
+
+    <div class="nav-group">
+      <div class="nav-label">Menu</div>
+      <button class="nav-item active" onclick="showPage('dashboard')">
+        <span class="icon">📊</span> Dashboard
+      </button>
+      <button class="nav-item" onclick="showPage('profile')">
+        <span class="icon">👤</span> Profil & Foto
+      </button>
+      <button class="nav-item" onclick="showPage('blogs')">
+        <span class="icon">📝</span> Blog Posts
+      </button>
+      <button class="nav-item" onclick="showPage('gallery')">
+        <span class="icon">🖼️</span> Gallery
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar" id="userAvatar">K</div>
+        <div class="user-name" id="userName">Loading...</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%" onclick="doLogout()">Keluar</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <div id="page-dashboard">
+      <div class="page-header">
+        <div class="page-title">Dashboard</div>
+        <div class="page-sub">Selamat datang di panel admin portfolio kamu</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem">
+        <div class="card" style="margin:0">
+          <div style="font-size:2rem;margin-bottom:.5rem">📝</div>
+          <div style="font-size:1.5rem;font-weight:800" id="dashBlogCount">—</div>
+          <div style="font-size:.8rem;color:var(--text3)">Blog Posts</div>
+        </div>
+        <div class="card" style="margin:0">
+          <div style="font-size:2rem;margin-bottom:.5rem">🌐</div>
+          <div style="font-size:1.5rem;font-weight:800">Live</div>
+          <div style="font-size:.8rem;color:var(--text3)">Status Website</div>
+        </div>
+        <div class="card" style="margin:0">
+          <div style="font-size:2rem;margin-bottom:.5rem">⚡</div>
+          <div style="font-size:1.5rem;font-weight:800">Vercel</div>
+          <div style="font-size:.8rem;color:var(--text3)">Hosting</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Aksi Cepat</div>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="showPage('profile')">✏️ Edit Profil</button>
+          <button class="btn btn-ghost btn-sm" onclick="showPage('blogs');setTimeout(()=>openNewBlogModal(),300)">➕ Tambah Blog</button>
+          <a class="btn btn-ghost btn-sm" href="https://kadekyahya.com" target="_blank">🔗 Buka Website</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="page-profile" class="hidden">
+      <div class="page-header">
+        <div class="page-title">Profil & Foto</div>
+        <div class="page-sub">Edit informasi profil yang tampil di halaman utama</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Foto Profil</div>
+        <div id="currentPhotoPreview" class="photo-preview-placeholder">👤</div>
+        <img id="photoPreviewImg" class="photo-preview hidden" src="" alt="">
+        <div class="form-group">
+          <label>Upload Foto Baru</label>
+          <div class="upload-area" id="uploadArea">
+            <input type="file" id="photoFile" accept="image/*" onchange="previewPhoto(this)">
+            <div style="font-size:2rem">📷</div>
+            <div class="upload-label">Klik untuk pilih foto (JPG, PNG, max 5MB)</div>
+            <div id="uploadFileName" style="font-size:.78rem;color:#3b82f6;margin-top:.4rem"></div>
+          </div>
+          <div class="form-hint">Foto akan diupload ke GitHub dan ditampilkan di portfolio</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="savePhoto()" id="savePhotoBtn">💾 Simpan Foto</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Informasi Utama</div>
+        <div class="form-group">
+          <label>Nama</label>
+          <input type="text" id="profileName" placeholder="Kadek Yahya">
+        </div>
+        <div class="form-group">
+          <label>Tagline / Jabatan</label>
+          <input type="text" id="profileTagline" placeholder="Entrepreneur & Marketing Consultant">
+        </div>
+        <div class="form-group">
+          <label>Bio Singkat (About)</label>
+          <textarea id="profileBio" placeholder="Ceritakan tentang diri kamu..."></textarea>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="saveProfile()" id="saveProfileBtn">💾 Simpan Perubahan</button>
+      </div>
+    </div>
+
+    <!-- GALLERY -->
+    <div id="page-gallery" class="hidden">
+      <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <div class="page-title">Photo Gallery</div>
+          <div class="page-sub">Kelola foto-foto di section Gallery halaman utama</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openAddGalleryModal()">➕ Tambah Foto</button>
+      </div>
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title">Preview Grid</div>
+        <div id="galleryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem">
+          <div style="color:var(--text3);font-size:.85rem">Memuat gallery...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOGS -->
+    <div id="page-blogs" class="hidden">
+      <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <div class="page-title">Blog Posts</div>
+          <div class="page-sub">Kelola semua artikel blog kamu</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openNewBlogModal()">➕ Tambah Blog</button>
+      </div>
+      <div id="blogList">
+        <div style="color:var(--text3);font-size:.9rem">Memuat daftar blog...</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- NEW BLOG MODAL -->
+<div class="modal-bg hidden" id="newBlogModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">📝 Tambah Blog Baru</div>
+      <button class="modal-close" onclick="closeNewBlogModal()">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label>Judul Blog</label>
+      <input type="text" id="blogTitle" placeholder="contoh: Meta Ads untuk Bisnis Kecil">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Slug (nama file)</label>
+        <input type="text" id="blogSlug" placeholder="meta-ads-bisnis-kecil">
+        <div class="form-hint">Otomatis dari judul, bisa diedit</div>
+      </div>
+      <div class="form-group">
+        <label>Tema Warna</label>
+        <select id="blogTheme">
+          <option value="blue">Biru (#1a56db)</option>
+          <option value="purple">Ungu (#7c3aed)</option>
+          <option value="gold">Emas (#f59e0b)</option>
+          <option value="green">Hijau (#16a34a)</option>
+          <option value="red">Merah (#dc2626)</option>
+          <option value="pink">Pink (#db2777)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Emoji / Ikon</label>
+      <input type="text" id="blogEmoji" placeholder="📢" maxlength="4" style="max-width:100px">
+    </div>
+    <div class="form-group">
+      <label>Kategori / Tag</label>
+      <input type="text" id="blogCategory" placeholder="contoh: Meta Ads · Digital Marketing">
+    </div>
+    <div class="form-group">
+      <label>Subjudul / Deskripsi Singkat</label>
+      <input type="text" id="blogSubtitle" placeholder="Panduan lengkap untuk...">
+    </div>
+
+    <hr class="section-divider">
+    <div style="font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem">Konten Utama</div>
+
+    <div class="form-group">
+      <label>Paragraf Pembuka</label>
+      <textarea id="blogIntro" placeholder="Tulis paragraf pengantar blog ini..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Paragraf Kedua</label>
+      <textarea id="blogIntro2" placeholder="Lanjutkan dengan detail atau konteks..."></textarea>
+    </div>
+
+    <hr class="section-divider">
+    <div style="font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem">Statistik (opsional)</div>
+
+    <div id="statsContainer">
+      <div class="stat-row">
+        <input type="text" placeholder="Angka (contoh: 3x)" id="stat1num">
+        <input type="text" placeholder="Label (contoh: ROAS)" id="stat1lbl">
+      </div>
+      <div class="stat-row">
+        <input type="text" placeholder="Angka" id="stat2num">
+        <input type="text" placeholder="Label" id="stat2lbl">
+      </div>
+      <div class="stat-row">
+        <input type="text" placeholder="Angka" id="stat3num">
+        <input type="text" placeholder="Label" id="stat3lbl">
+      </div>
+      <div class="stat-row">
+        <input type="text" placeholder="Angka" id="stat4num">
+        <input type="text" placeholder="Label" id="stat4lbl">
+      </div>
+    </div>
+
+    <hr class="section-divider">
+    <div style="font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem">Layanan / Poin Utama (opsional)</div>
+
+    <div id="servicesContainer">
+      <div class="form-row" style="margin-bottom:.5rem">
+        <div class="form-group" style="margin:0"><input type="text" placeholder="Judul poin 1" id="svc1title"></div>
+        <div class="form-group" style="margin:0"><input type="text" placeholder="Deskripsi singkat" id="svc1desc"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:.5rem">
+        <div class="form-group" style="margin:0"><input type="text" placeholder="Judul poin 2" id="svc2title"></div>
+        <div class="form-group" style="margin:0"><input type="text" placeholder="Deskripsi singkat" id="svc2desc"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:.5rem">
+        <div class="form-group" style="margin:0"><input type="text" placeholder="Judul poin 3" id="svc3title"></div>
+        <div class="form-group" style="margin:0"><input type="text" placeholder="Deskripsi singkat" id="svc3desc"></div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div style="display:flex;gap:.75rem;justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="closeNewBlogModal()">Batal</button>
+      <button class="btn btn-primary" onclick="saveBlog()" id="saveBlogBtn">🚀 Publish Blog</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD GALLERY MODAL -->
+<div class="modal-bg hidden" id="addGalleryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="galleryModalTitle">🖼️ Tambah Foto Gallery</div>
+      <button class="modal-close" onclick="closeAddGalleryModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Upload Foto</label>
+      <div class="upload-area" id="galUploadArea">
+        <input type="file" id="galPhotoFile" accept="image/*" onchange="previewGalPhoto(this)">
+        <div style="font-size:2rem" id="galUploadIcon">📷</div>
+        <div class="upload-label" id="galUploadLabel">Klik untuk pilih foto</div>
+      </div>
+      <img id="galPhotoPreview" class="hidden" style="width:100%;max-height:200px;object-fit:cover;border-radius:10px;margin-top:.75rem" src="" alt="">
+    </div>
+    <div class="form-group">
+      <label>Caption / Judul Foto</label>
+      <input type="text" id="galCaption" placeholder="contoh: Workspace Setup">
+    </div>
+    <div class="form-group">
+      <label>Ukuran di Grid</label>
+      <select id="galSize">
+        <option value="">Normal</option>
+        <option value="wide">Wide (2 kolom)</option>
+        <option value="tall">Tall (2 baris)</option>
+        <option value="wide tall">Wide + Tall (besar)</option>
+      </select>
+    </div>
+    <input type="hidden" id="galEditIndex" value="">
+    <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:1rem">
+      <button class="btn btn-ghost" onclick="closeAddGalleryModal()">Batal</button>
+      <button class="btn btn-primary" onclick="saveGalleryItem()" id="saveGalBtn">🚀 Simpan Foto</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- LOADING -->
+<div class="loading-overlay hidden" id="loadingOverlay">
+  <div class="spinner" style="width:32px;height:32px;border-width:3px"></div>
+  <p id="loadingText">Menyimpan perubahan...</p>
+</div>
+
+<script>
+const REPO = 'elevateourbrand/portfolio-kadek';
+const API  = 'https://api.github.com';
+let TOKEN = '';
+let currentUser = null;
+let editingBlogSlug = null;
+
+// ── UTILS ──────────────────────────────────────────
+function toast(msg, type='info', duration=3500){
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(()=>el.remove(), duration);
+}
+
+function loading(show, text='Menyimpan perubahan...'){
+  document.getElementById('loadingOverlay').classList.toggle('hidden',!show);
+  document.getElementById('loadingText').textContent = text;
+}
+
+function b64encode(str){ return btoa(unescape(encodeURIComponent(str))); }
+function b64decode(str){ return decodeURIComponent(escape(atob(str))); }
+
+async function ghFetch(path, opts={}){
+  const res = await fetch(`${API}${path}`, {
+    ...opts,
+    headers: {
+      Authorization: `token ${TOKEN}`,
+      Accept: 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+      ...(opts.headers||{})
+    }
+  });
+  if(!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+  return res.json();
+}
+
+async function getFile(path){
+  try {
+    const data = await ghFetch(`/repos/${REPO}/contents/${path}`);
+    return { content: b64decode(data.content.replace(/\n/g,'')), sha: data.sha };
+  } catch(e) {
+    if(e.message.includes('404')) return null;
+    throw e;
+  }
+}
+
+async function putFile(path, content, message, sha=null){
+  const body = { message, content: b64encode(content) };
+  if(sha) body.sha = sha;
+  return ghFetch(`/repos/${REPO}/contents/${path}`, {
+    method: 'PUT',
+    body: JSON.stringify(body)
+  });
+}
+
+async function putFileBinary(path, base64Content, message, sha=null){
+  const body = { message, content: base64Content };
+  if(sha) body.sha = sha;
+  return ghFetch(`/repos/${REPO}/contents/${path}`, {
+    method: 'PUT',
+    body: JSON.stringify(body)
+  });
+}
+
+// ── LOGIN ──────────────────────────────────────────
+async function doLogin(){
+  const token = document.getElementById('tokenInput').value.trim();
+  if(!token){ toast('Masukkan GitHub token dulu','error'); return; }
+
+  document.getElementById('loginBtnText').innerHTML = '<span class="spinner"></span> Memeriksa...';
+  document.getElementById('loginError').style.display='none';
+
+  try {
+    TOKEN = token;
+    const user = await ghFetch('/user');
+    currentUser = user;
+    localStorage.setItem('ghToken', token);
+    initApp();
+  } catch(e) {
+    TOKEN = '';
+    document.getElementById('loginError').textContent = 'Token tidak valid atau tidak memiliki akses. Pastikan scope "repo" dicentang.';
+    document.getElementById('loginError').style.display='block';
+    document.getElementById('loginBtnText').textContent = 'Masuk';
+  }
+}
+
+function doLogout(){
+  localStorage.removeItem('ghToken');
+  TOKEN = '';
+  document.getElementById('appPage').classList.add('hidden');
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.getElementById('tokenInput').value = '';
+  document.getElementById('loginBtnText').textContent = 'Masuk';
+}
+
+async function initApp(){
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('appPage').classList.remove('hidden');
+
+  // Set user info
+  document.getElementById('userName').textContent = currentUser.login;
+  const av = document.getElementById('userAvatar');
+  if(currentUser.avatar_url){
+    av.style.backgroundImage = `url(${currentUser.avatar_url})`;
+    av.style.backgroundSize = 'cover';
+    av.textContent = '';
+  } else {
+    av.textContent = currentUser.login[0].toUpperCase();
+  }
+
+  loadDashboard();
+  loadProfile();
+  loadBlogs();
+  loadGallery();
+}
+
+// ── AUTO LOGIN ─────────────────────────────────────
+window.addEventListener('DOMContentLoaded', async ()=>{
+  const saved = localStorage.getItem('ghToken');
+  if(saved){
+    document.getElementById('tokenInput').value = saved;
+    TOKEN = saved;
+    try {
+      currentUser = await ghFetch('/user');
+      initApp();
+    } catch(e){
+      localStorage.removeItem('ghToken');
+      TOKEN = '';
+    }
+  }
+  document.getElementById('tokenInput').addEventListener('keydown', e=>{
+    if(e.key==='Enter') doLogin();
+  });
+});
+
+// ── NAV ───────────────────────────────────────────
+function showPage(page){
+  ['dashboard','profile','blogs','gallery'].forEach(p=>{
+    document.getElementById(`page-${p}`).classList.toggle('hidden', p!==page);
+  });
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    const t = el.textContent.toLowerCase();
+    el.classList.toggle('active',
+      (page==='dashboard' && t.includes('dashboard')) ||
+      (page==='profile'   && t.includes('profil')) ||
+      (page==='blogs'     && t.includes('blog')) ||
+      (page==='gallery'   && t.includes('gallery'))
+    );
+  });
+}
+
+// ── DASHBOARD ─────────────────────────────────────
+async function loadDashboard(){
+  try {
+    const files = await ghFetch(`/repos/${REPO}/contents/`);
+    const blogs = files.filter(f=>f.name.startsWith('blog-') && f.name.endsWith('.html'));
+    document.getElementById('dashBlogCount').textContent = blogs.length;
+  } catch(e){}
+}
+
+// ── PROFILE ───────────────────────────────────────
+async function loadProfile(){
+  try {
+    const {content} = await getFile('index.html') || {};
+    if(!content) return;
+
+    // Extract current photo
+    const photoMatch = content.match(/class="photo"><img src="([^"]+)"/);
+    if(photoMatch){
+      const src = photoMatch[1];
+      const img = document.getElementById('photoPreviewImg');
+      img.src = src.startsWith('http') ? src : `https://raw.githubusercontent.com/${REPO}/main/${encodeURIComponent(src)}`;
+      img.classList.remove('hidden');
+      document.getElementById('currentPhotoPreview').classList.add('hidden');
+    }
+
+    // Extract name
+    const nameMatch = content.match(/hero-name[^>]*>Saya <span[^>]*>([^<]+)<\/span><br>([^<]+)<\/h1>/);
+    if(nameMatch){
+      document.getElementById('profileName').value = nameMatch[1] + ' ' + nameMatch[2].trim();
+    }
+
+    // Extract tagline
+    const tagMatch = content.match(/hero-tagline[^>]*>([^<]+)<\/p>/);
+    if(tagMatch){
+      document.getElementById('profileTagline').value = tagMatch[1].replace(/&amp;/g,'&');
+    }
+
+    // Extract bio
+    const bioMatch = content.match(/Halo! Saya [^<]+<\/p>/);
+    if(bioMatch){
+      document.getElementById('profileBio').value = bioMatch[0].replace(/<\/p>$/,'').replace(/<[^>]+>/g,'');
+    }
+  } catch(e){
+    console.error(e);
+  }
+}
+
+function previewPhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 5*1024*1024){ toast('File terlalu besar (max 5MB)','error'); return; }
+  document.getElementById('uploadFileName').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    const img = document.getElementById('photoPreviewImg');
+    img.src = e.target.result;
+    img.classList.remove('hidden');
+    document.getElementById('currentPhotoPreview').classList.add('hidden');
+  };
+  reader.readAsDataURL(file);
+}
+
+async function savePhoto(){
+  const file = document.getElementById('photoFile').files[0];
+  if(!file){ toast('Pilih foto dulu','error'); return; }
+
+  loading(true, 'Mengupload foto...');
+  try {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    await new Promise(r=>reader.onload=r);
+    const b64 = reader.result.split(',')[1];
+    const ext = file.name.split('.').pop();
+    const filename = `foto-profile.${ext}`;
+
+    // Upload photo file
+    const existing = await getFile(filename);
+    await putFileBinary(filename, b64, 'Update foto profil', existing?.sha);
+
+    // Update index.html to reference new photo
+    const indexFile = await getFile('index.html');
+    let html = indexFile.content;
+    html = html.replace(/class="photo"><img src="[^"]*"/, `class="photo"><img src="${filename}"`);
+    await putFile('index.html', html, 'Update foto profil di index.html', indexFile.sha);
+
+    toast('Foto berhasil diupdate! Website akan update otomatis dalam ~30 detik', 'success', 5000);
+  } catch(e){
+    toast('Gagal upload foto: '+e.message,'error');
+  }
+  loading(false);
+}
+
+async function saveProfile(){
+  const name = document.getElementById('profileName').value.trim();
+  const tagline = document.getElementById('profileTagline').value.trim();
+  const bio = document.getElementById('profileBio').value.trim();
+
+  if(!name || !tagline){ toast('Nama dan tagline wajib diisi','error'); return; }
+
+  loading(true, 'Menyimpan profil...');
+  try {
+    const indexFile = await getFile('index.html');
+    let html = indexFile.content;
+
+    // Update name — format: "Saya <FirstName>\n<LastName>"
+    const parts = name.split(' ');
+    const first = parts[0];
+    const rest = parts.slice(1).join(' ');
+    html = html.replace(
+      /hero-name[^>]*>Saya <span[^>]*>[^<]+<\/span><br>[^<]+<\/h1>/,
+      `hero-name">Saya <span class="hl">${first}</span><br>${rest}</h1>`
+    );
+
+    // Update tagline
+    html = html.replace(
+      /hero-tagline[^>]*>[^<]+<\/p>/,
+      `hero-tagline">${tagline.replace(/&/g,'&amp;')}</p>`
+    );
+
+    // Update bio
+    if(bio){
+      html = html.replace(
+        /Halo! Saya [^<]+<\/p>/,
+        `${bio}</p>`
+      );
+    }
+
+    await putFile('index.html', html, 'Update profil: nama, tagline, bio', indexFile.sha);
+    toast('Profil berhasil disimpan! Website akan update dalam ~30 detik', 'success', 5000);
+  } catch(e){
+    toast('Gagal menyimpan: '+e.message,'error');
+  }
+  loading(false);
+}
+
+// ── BLOGS ─────────────────────────────────────────
+const BLOG_EMOJIS = {'meta-ads':'📢','rdnb':'💍','tgif':'🎪','univlox':'🎓'};
+
+async function loadBlogs(){
+  const list = document.getElementById('blogList');
+  try {
+    const files = await ghFetch(`/repos/${REPO}/contents/`);
+    const blogs = files.filter(f=>f.name.startsWith('blog-') && f.name.endsWith('.html'));
+
+    if(!blogs.length){
+      list.innerHTML = '<div style="color:var(--text3);font-size:.9rem;padding:1rem 0">Belum ada blog. Klik "+ Tambah Blog" untuk mulai.</div>';
+      return;
+    }
+
+    list.innerHTML = '';
+    for(const blog of blogs){
+      const slug = blog.name.replace('blog-','').replace('.html','');
+      const emoji = Object.entries(BLOG_EMOJIS).find(([k])=>slug.includes(k))?.[1] || '📝';
+      const div = document.createElement('div');
+      div.className = 'blog-item';
+      div.innerHTML = `
+        <div class="blog-item-left">
+          <div class="blog-emoji">${emoji}</div>
+          <div>
+            <div class="blog-title">${blog.name}</div>
+            <div class="blog-slug">kadekyahya.com/${blog.name}</div>
+          </div>
+        </div>
+        <div class="blog-actions">
+          <a href="https://kadekyahya.com/${blog.name}" target="_blank" class="btn btn-ghost btn-sm">🔗 Lihat</a>
+          <button class="btn btn-ghost btn-sm" onclick="editBlog('${blog.name}')">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteBlog('${blog.name}','${blog.sha}')">🗑️</button>
+        </div>
+      `;
+      list.appendChild(div);
+    }
+  } catch(e){
+    list.innerHTML = `<div style="color:#f87171;font-size:.9rem">Gagal memuat blog: ${e.message}</div>`;
+  }
+}
+
+async function editBlog(filename){
+  const slug = filename.replace('blog-','').replace('.html','');
+  editingBlogSlug = slug;
+  document.getElementById('modalTitle').textContent = '✏️ Edit Blog';
+  document.getElementById('saveBlogBtn').textContent = '💾 Simpan Perubahan';
+  openNewBlogModal();
+
+  loading(true,'Memuat blog...');
+  try {
+    const {content} = await getFile(filename);
+    // Extract key fields from HTML
+    const titleMatch = content.match(/<title>([^<]+)<\/title>/);
+    if(titleMatch) document.getElementById('blogTitle').value = titleMatch[1].replace(' — Kadek Yahya','');
+
+    document.getElementById('blogSlug').value = slug;
+    document.getElementById('blogSlug').disabled = true;
+  } catch(e){ toast('Gagal memuat blog','error'); }
+  loading(false);
+}
+
+async function deleteBlog(filename, sha){
+  if(!confirm(`Hapus ${filename}? Tindakan ini tidak bisa dibatalkan.`)) return;
+  loading(true,'Menghapus blog...');
+  try {
+    await ghFetch(`/repos/${REPO}/contents/${filename}`,{
+      method:'DELETE',
+      body: JSON.stringify({ message: `Hapus blog: ${filename}`, sha })
+    });
+    toast(`${filename} berhasil dihapus`,'success');
+    loadBlogs();
+    loadDashboard();
+  } catch(e){ toast('Gagal menghapus: '+e.message,'error'); }
+  loading(false);
+}
+
+function openNewBlogModal(){
+  if(!editingBlogSlug){
+    document.getElementById('modalTitle').textContent = '📝 Tambah Blog Baru';
+    document.getElementById('saveBlogBtn').textContent = '🚀 Publish Blog';
+    document.getElementById('blogSlug').disabled = false;
+    // Clear form
+    ['blogTitle','blogSlug','blogEmoji','blogCategory','blogSubtitle','blogIntro','blogIntro2',
+     'stat1num','stat1lbl','stat2num','stat2lbl','stat3num','stat3lbl','stat4num','stat4lbl',
+     'svc1title','svc1desc','svc2title','svc2desc','svc3title','svc3desc'
+    ].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('blogTheme').value = 'blue';
+  }
+  document.getElementById('newBlogModal').classList.remove('hidden');
+}
+
+function closeNewBlogModal(){
+  document.getElementById('newBlogModal').classList.add('hidden');
+  editingBlogSlug = null;
+}
+
+// Auto-slug from title
+document.addEventListener('DOMContentLoaded',()=>{
+  const titleInput = document.getElementById('blogTitle');
+  if(titleInput){
+    titleInput.addEventListener('input',()=>{
+      if(editingBlogSlug) return;
+      const slug = titleInput.value.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').trim().slice(0,40);
+      document.getElementById('blogSlug').value = slug;
+    });
+  }
+});
+
+const THEME_COLORS = {
+  blue:  { a1:'#1a56db', a2:'#3b82f6', r:'26,86,219' },
+  purple:{ a1:'#7c3aed', a2:'#a855f7', r:'124,58,237' },
+  gold:  { a1:'#d97706', a2:'#f59e0b', r:'217,119,6' },
+  green: { a1:'#16a34a', a2:'#22c55e', r:'22,163,74' },
+  red:   { a1:'#dc2626', a2:'#f87171', r:'220,38,38' },
+  pink:  { a1:'#db2777', a2:'#f472b6', r:'219,39,119' },
+};
+
+function generateBlogHTML(data){
+  const c = THEME_COLORS[data.theme] || THEME_COLORS.blue;
+  const stats = data.stats.filter(s=>s.num && s.lbl);
+  const svcs  = data.services.filter(s=>s.title);
+
+  const statsHtml = stats.length ? `
+<section style="padding:60px 0;background:linear-gradient(180deg,transparent,rgba(${c.r},.04) 50%,transparent)">
+<div class="container">
+  <div style="display:grid;grid-template-columns:repeat(${Math.min(stats.length,4)},1fr);gap:1rem">
+    ${stats.map(s=>`
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.4rem;text-align:center;transition:all .35s">
+      <div style="font-size:2rem;font-weight:900;background:linear-gradient(135deg,${c.a1},${c.a2});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1">${s.num}</div>
+      <div style="font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-top:.4rem">${s.lbl}</div>
+    </div>`).join('')}
+  </div>
+</div>
+</section>` : '';
+
+  const svcsHtml = svcs.length ? `
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-top:2rem">
+  ${svcs.map(s=>`
+  <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.5rem;transition:all .3s">
+    <div style="font-size:.93rem;font-weight:700;margin-bottom:.35rem">${s.title}</div>
+    <div style="font-size:.81rem;color:#94a3b8;line-height:1.55">${s.desc||''}</div>
+  </div>`).join('')}
+</div>` : '';
+
+  return `<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${data.title} — Kadek Yahya</title>
+<meta name="description" content="${data.subtitle}">
+<style>
+:root{--bg:#050510;--bg2:#0d0d1f;--card:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#f8fafc;--text2:#94a3b8;--text3:#64748b;--a1:${c.a1};--a2:${c.a2};--g:linear-gradient(135deg,var(--a1),var(--a2));--glow:0 0 28px rgba(${c.r},.25)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--g);border-radius:3px}
+::selection{background:rgba(${c.r},.3);color:#fff}
+.container{max-width:960px;margin:0 auto;padding:0 2rem}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 0;background:rgba(5,5,16,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between}
+.back-link{display:inline-flex;align-items:center;gap:7px;color:var(--text2);text-decoration:none;font-size:.85rem;font-weight:500;transition:all .3s;padding:7px 14px;border:1px solid var(--border);border-radius:8px}
+.back-link:hover{color:var(--text);border-color:rgba(${c.r},.4);background:rgba(${c.r},.05)}
+.nav-brand{font-size:1.1rem;font-weight:800;background:var(--g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+.hire-btn{padding:7px 18px;background:var(--g);color:#fff;text-decoration:none;border-radius:8px;font-size:.83rem;font-weight:600;transition:all .3s;box-shadow:var(--glow)}
+.hire-btn:hover{opacity:.9;transform:translateY(-2px)}
+.hero{min-height:60vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:100px 0 60px}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.13}
+.b1{width:520px;height:520px;background:radial-gradient(circle,${c.a1},transparent);top:-100px;right:-60px;animation:bF 9s ease-in-out infinite}
+.b2{width:380px;height:380px;background:radial-gradient(circle,${c.a2},transparent);bottom:-40px;left:-80px;animation:bF 11s ease-in-out infinite reverse}
+@keyframes bF{0%,100%{transform:translate(0,0)}50%{transform:translate(25px,-20px)}}
+.chip{display:inline-flex;align-items:center;gap:7px;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:5px 14px;border-radius:100px;background:rgba(74,222,128,.1);color:#4ade80;border:1px solid rgba(74,222,128,.25);margin-bottom:1.4rem}
+.chip-dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+.hero-emoji{font-size:4rem;margin-bottom:.8rem;display:block}
+.hero-title{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.1;margin-bottom:1rem;background:linear-gradient(135deg,#fff 0%,#94a3b8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-title .hl{background:var(--g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(.95rem,2vw,1.15rem);color:var(--text2);max-width:560px;margin-bottom:1.8rem;line-height:1.75}
+.sec{padding:80px 0}
+.sec-label{display:inline-block;font-size:.67rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);padding:4px 13px;border:1px solid rgba(${c.r},.3);border-radius:100px;margin-bottom:12px;background:rgba(${c.r},.06)}
+.sec-title{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;margin-bottom:1.1rem;background:linear-gradient(135deg,#fff,var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sec-text{color:var(--text2);line-height:1.8;font-size:.95rem;margin-bottom:1.1rem}
+.cta{padding:80px 0;text-align:center}
+.cta-title{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-bottom:.9rem;background:linear-gradient(135deg,#fff,var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cta-sub{color:var(--text2);font-size:.95rem;margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7}
+.btn-p{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;background:var(--g);color:#fff;text-decoration:none;border-radius:10px;font-weight:600;font-size:.92rem;transition:all .3s;box-shadow:var(--glow)}
+.btn-p:hover{transform:translateY(-2px);opacity:.9}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.8rem 0}
+.foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.foot-back{color:var(--text2);text-decoration:none;font-size:.85rem;transition:color .3s;display:inline-flex;align-items:center;gap:6px}
+.foot-back:hover{color:var(--text)}
+.foot-copy{font-size:.74rem;color:var(--text3)}
+@media(max-width:480px){.container{padding:0 1.2rem}.hire-btn{display:none}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="back-link">← Portfolio</a>
+      <a href="index.html" class="nav-brand">kadekyahya.com</a>
+      <a href="index.html#contact" class="hire-btn">Hire Me</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div style="position:absolute;inset:0;overflow:hidden">
+    <div class="blob b1"></div><div class="blob b2"></div>
+  </div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="chip"><span class="chip-dot"></span>${data.category || 'Blog'}</div>
+    <span class="hero-emoji">${data.emoji || '📝'}</span>
+    <h1 class="hero-title"><span class="hl">${data.title}</span></h1>
+    <p class="hero-sub">${data.subtitle}</p>
+  </div>
+</section>
+
+${statsHtml}
+
+<section class="sec">
+  <div class="container">
+    <div class="sec-label">Overview</div>
+    <h2 class="sec-title">Tentang Ini</h2>
+    <p class="sec-text">${data.intro}</p>
+    ${data.intro2 ? `<p class="sec-text">${data.intro2}</p>` : ''}
+    ${svcsHtml}
+  </div>
+</section>
+
+<section class="cta">
+  <div class="container">
+    <h2 class="cta-title">Tertarik Bekerja Sama?</h2>
+    <p class="cta-sub">Hubungi saya dan diskusikan bagaimana saya bisa membantu bisnis kamu berkembang.</p>
+    <a href="index.html#contact" class="btn-p">💬 Hubungi Saya</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot">
+      <a href="index.html" class="foot-back">← Kembali ke Portfolio</a>
+      <span class="foot-copy">© 2025 Kadek Yahya</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>`;
+}
+
+// ── GALLERY ───────────────────────────────────────
+let galleryItems = [];
+
+function parseGallery(html){
+  const items = [];
+  const re = /<div class="gal-item([^"]*)" onclick="lb\('([^']*)','([^']*)'\)">([\s\S]*?)<\/div>\s*<\/div>/g;
+  let m;
+  while((m = re.exec(html)) !== null){
+    const classes = m[1].trim();
+    const caption = m[3];
+    const inner   = m[4];
+    const imgMatch = inner.match(/src="([^"]+)"/);
+    const emojiMatch = inner.match(/font-size:[^>]+>([^<]+)</);
+    items.push({
+      classes,
+      caption,
+      img: imgMatch ? imgMatch[1] : null,
+      emoji: !imgMatch && emojiMatch ? emojiMatch[1].trim() : '🖼️',
+    });
+  }
+  return items;
+}
+
+function buildGalItemHTML(item, idx){
+  const sizeClasses = item.classes ? ' ' + item.classes : '';
+  const inner = item.img
+    ? `<div class="gal-ph" style="padding:0"><img src="${item.img}" style="width:100%;height:100%;object-fit:cover"></div>`
+    : `<div class="gal-ph" style="background:linear-gradient(135deg,rgba(26,86,219,.2),rgba(124,58,237,.2));font-size:2.5rem">${item.emoji}</div>`;
+  return `<div class="gal-item${sizeClasses} fade-up" onclick="lb('${item.caption}','${item.caption}')">\n        ${inner}\n        <div class="gal-ov">🔍</div>`;
+}
+
+async function loadGallery(){
+  const grid = document.getElementById('galleryGrid');
+  try {
+    const file = await getFile('index.html');
+    if(!file){ grid.innerHTML='<div style="color:var(--text3)">Gagal memuat</div>'; return; }
+    galleryItems = parseGallery(file.content);
+    renderGalleryGrid();
+  } catch(e){ grid.innerHTML=`<div style="color:#f87171">${e.message}</div>`; }
+}
+
+function renderGalleryGrid(){
+  const grid = document.getElementById('galleryGrid');
+  if(!galleryItems.length){ grid.innerHTML='<div style="color:var(--text3);font-size:.85rem">Belum ada foto.</div>'; return; }
+  grid.innerHTML = galleryItems.map((item,i)=>`
+    <div style="position:relative;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden;aspect-ratio:1">
+      ${item.img
+        ? `<img src="${item.img.startsWith('http')?item.img:`https://raw.githubusercontent.com/${REPO}/main/${item.img}`}" style="width:100%;height:100%;object-fit:cover">`
+        : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem">${item.emoji}</div>`
+      }
+      <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(5,5,16,.8);padding:.4rem .6rem;font-size:.73rem;color:var(--text2)">${item.caption}</div>
+      <div style="position:absolute;top:.4rem;right:.4rem;display:flex;gap:.3rem">
+        <button onclick="openEditGalleryModal(${i})" style="background:rgba(26,86,219,.7);border:none;color:#fff;border-radius:6px;padding:3px 7px;cursor:pointer;font-size:.7rem">✏️</button>
+        <button onclick="deleteGalleryItem(${i})" style="background:rgba(239,68,68,.7);border:none;color:#fff;border-radius:6px;padding:3px 7px;cursor:pointer;font-size:.7rem">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openAddGalleryModal(){
+  document.getElementById('galleryModalTitle').textContent = '🖼️ Tambah Foto Gallery';
+  document.getElementById('galPhotoFile').value = '';
+  document.getElementById('galCaption').value = '';
+  document.getElementById('galSize').value = '';
+  document.getElementById('galEditIndex').value = '';
+  document.getElementById('galPhotoPreview').classList.add('hidden');
+  document.getElementById('galUploadIcon').textContent = '📷';
+  document.getElementById('galUploadLabel').textContent = 'Klik untuk pilih foto';
+  document.getElementById('saveGalBtn').textContent = '🚀 Simpan Foto';
+  document.getElementById('addGalleryModal').classList.remove('hidden');
+}
+
+function openEditGalleryModal(idx){
+  const item = galleryItems[idx];
+  document.getElementById('galleryModalTitle').textContent = '✏️ Edit Foto Gallery';
+  document.getElementById('galCaption').value = item.caption;
+  document.getElementById('galSize').value = item.classes.replace('fade-up','').trim();
+  document.getElementById('galEditIndex').value = idx;
+  document.getElementById('saveGalBtn').textContent = '💾 Simpan Perubahan';
+  if(item.img){
+    const prev = document.getElementById('galPhotoPreview');
+    prev.src = item.img.startsWith('http') ? item.img : `https://raw.githubusercontent.com/${REPO}/main/${item.img}`;
+    prev.classList.remove('hidden');
+  }
+  document.getElementById('addGalleryModal').classList.remove('hidden');
+}
+
+function closeAddGalleryModal(){
+  document.getElementById('addGalleryModal').classList.add('hidden');
+}
+
+function previewGalPhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+  document.getElementById('galUploadLabel').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    const prev = document.getElementById('galPhotoPreview');
+    prev.src = e.target.result;
+    prev.classList.remove('hidden');
+    document.getElementById('galUploadIcon').textContent = '✅';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveGalleryItem(){
+  const caption  = document.getElementById('galCaption').value.trim();
+  const sizeVal  = document.getElementById('galSize').value;
+  const editIdx  = document.getElementById('galEditIndex').value;
+  const fileInput= document.getElementById('galPhotoFile');
+  const file     = fileInput.files[0];
+  const isEdit   = editIdx !== '';
+
+  if(!caption){ toast('Caption wajib diisi','error'); return; }
+
+  loading(true, 'Menyimpan foto gallery...');
+  try {
+    let imgPath = isEdit ? (galleryItems[parseInt(editIdx)].img || null) : null;
+
+    if(file){
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      await new Promise(r=>reader.onload=r);
+      const b64 = reader.result.split(',')[1];
+      const ext  = file.name.split('.').pop();
+      const fname= `gallery/${caption.toLowerCase().replace(/[^a-z0-9]/g,'-')}-${Date.now()}.${ext}`;
+      const existing = await getFile(fname);
+      await putFileBinary(fname, b64, `Upload gallery: ${caption}`, existing?.sha||null);
+      imgPath = fname;
+    }
+
+    const classes = sizeVal ? sizeVal : '';
+    const newItem = { classes, caption, img: imgPath, emoji: '🖼️' };
+
+    if(isEdit){
+      galleryItems[parseInt(editIdx)] = newItem;
+    } else {
+      galleryItems.push(newItem);
+    }
+
+    await writeGalleryToIndex();
+    renderGalleryGrid();
+    closeAddGalleryModal();
+    toast(`Foto "${caption}" berhasil disimpan!`, 'success', 4000);
+  } catch(e){ toast('Gagal: '+e.message,'error'); }
+  loading(false);
+}
+
+async function deleteGalleryItem(idx){
+  const item = galleryItems[idx];
+  if(!confirm(`Hapus foto "${item.caption}"?`)) return;
+  galleryItems.splice(idx,1);
+  loading(true,'Menghapus foto...');
+  try {
+    await writeGalleryToIndex();
+    renderGalleryGrid();
+    toast('Foto dihapus','success');
+  } catch(e){ toast('Gagal: '+e.message,'error'); galleryItems.splice(idx,0,item); }
+  loading(false);
+}
+
+async function writeGalleryToIndex(){
+  const indexFile = await getFile('index.html');
+  let html = indexFile.content;
+
+  const newGalHTML = galleryItems.map((item,i)=>{
+    const d = `d${(i%6)+1}`;
+    const sizeClasses = item.classes ? ' '+item.classes : '';
+    const inner = item.img
+      ? `<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;border-radius:0">`
+      : item.emoji;
+    const bg = item.img ? 'padding:0' : 'background:linear-gradient(135deg,rgba(26,86,219,.2),rgba(124,58,237,.2))';
+    return `      <div class="gal-item${sizeClasses} fade-up ${d}" onclick="lb('${item.caption}','${item.caption}')">\n        <div class="gal-ph" style="${bg}">${inner}</div>\n        <div class="gal-ov">🔍</div>\n      </div>`;
+  }).join('\n');
+
+  html = html.replace(
+    /(<div class="gallery-grid">)([\s\S]*?)(<\/div>\s*<\/section>)/,
+    (_, open, _inner, close) => `${open}\n${newGalHTML}\n    ${close}`
+  );
+
+  await putFile('index.html', html, 'Update gallery foto', indexFile.sha);
+}
+
+async function saveBlog(){
+  const title = document.getElementById('blogTitle').value.trim();
+  const slug  = document.getElementById('blogSlug').value.trim().replace(/[^a-z0-9-]/g,'');
+
+  if(!title){ toast('Judul wajib diisi','error'); return; }
+  if(!slug){  toast('Slug wajib diisi','error');  return; }
+
+  const data = {
+    title,
+    slug,
+    theme:    document.getElementById('blogTheme').value,
+    emoji:    document.getElementById('blogEmoji').value || '📝',
+    category: document.getElementById('blogCategory').value.trim() || 'Blog',
+    subtitle: document.getElementById('blogSubtitle').value.trim(),
+    intro:    document.getElementById('blogIntro').value.trim() || '...',
+    intro2:   document.getElementById('blogIntro2').value.trim(),
+    stats: [
+      {num:document.getElementById('stat1num').value.trim(), lbl:document.getElementById('stat1lbl').value.trim()},
+      {num:document.getElementById('stat2num').value.trim(), lbl:document.getElementById('stat2lbl').value.trim()},
+      {num:document.getElementById('stat3num').value.trim(), lbl:document.getElementById('stat3lbl').value.trim()},
+      {num:document.getElementById('stat4num').value.trim(), lbl:document.getElementById('stat4lbl').value.trim()},
+    ],
+    services: [
+      {title:document.getElementById('svc1title').value.trim(), desc:document.getElementById('svc1desc').value.trim()},
+      {title:document.getElementById('svc2title').value.trim(), desc:document.getElementById('svc2desc').value.trim()},
+      {title:document.getElementById('svc3title').value.trim(), desc:document.getElementById('svc3desc').value.trim()},
+    ]
+  };
+
+  const filename = `blog-${slug}.html`;
+  loading(true, editingBlogSlug ? 'Menyimpan perubahan...' : 'Mempublish blog baru...');
+
+  try {
+    const existing = await getFile(filename);
+    const html = generateBlogHTML(data);
+    const msg = editingBlogSlug ? `Edit blog: ${title}` : `Tambah blog baru: ${title}`;
+    await putFile(filename, html, msg, existing?.sha || null);
+
+    toast(`Blog "${title}" berhasil ${editingBlogSlug?'diupdate':'dipublish'}! 🎉`, 'success', 5000);
+    closeNewBlogModal();
+    loadBlogs();
+    loadDashboard();
+  } catch(e){
+    toast('Gagal menyimpan: '+e.message,'error');
+  }
+  loading(false);
+}
+</script>
+</body>
+</html>
