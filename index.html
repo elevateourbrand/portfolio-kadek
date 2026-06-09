@@ -189,12 +189,17 @@ nav.scrolled{background:rgba(5,5,16,.88);backdrop-filter:blur(20px);border-botto
 .gal-item:hover .gal-ph{transform:scale(1.05)}
 .gal-ov{position:absolute;inset:0;background:rgba(5,5,16,.7);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;font-size:1.8rem}
 .gal-item:hover .gal-ov{opacity:1}
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:2000;display:none;align-items:center;justify-content:center}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;padding:1.5rem}
 .lightbox.open{display:flex}
-.lb-close{position:absolute;top:20px;right:20px;background:none;border:none;color:#fff;font-size:2.2rem;cursor:pointer;opacity:.7;transition:opacity .3s;line-height:1}
-.lb-close:hover{opacity:1}
-.lb-box{background:rgba(13,13,31,.9);padding:2.5rem;border-radius:20px;border:1px solid var(--border);text-align:center;max-width:90vw}
-.lb-icon{font-size:5rem;margin-bottom:1rem}
+.lb-close{position:absolute;top:20px;right:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:1.2rem;cursor:pointer;opacity:.8;transition:all .3s;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.lb-close:hover{opacity:1;background:rgba(255,255,255,.2)}
+.lb-box{background:rgba(13,13,31,.95);border-radius:20px;border:1px solid var(--border);text-align:center;max-width:800px;width:100%;overflow:hidden}
+.lb-img-wrap{width:100%;max-height:60vh;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
+.lb-img-wrap img{width:100%;max-height:60vh;object-fit:contain}
+.lb-emoji-wrap{padding:3rem;font-size:6rem}
+.lb-info{padding:1.5rem 2rem 2rem}
+.lb-title{font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:.6rem}
+.lb-desc{font-size:.9rem;color:var(--text2);line-height:1.7}
 
 /* ── BLOG ── */
 .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
@@ -606,27 +611,27 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2.8rem 0
       <p class="section-subtitle">Momen-momen berkesan dalam perjalanan karir saya</p>
     </div>
     <div class="gallery-grid">
-      <div class="gal-item tall fade-up d1" onclick="lb('RDNB Jewelry','RDNB Jewelry')">
+      <div class="gal-item tall fade-up d1" onclick="lb('gallery/rdnb-jewelry-1781020985156.jpg','RDNB Jewelry','')">
         <div class="gal-ph" style="padding:0"><img src="gallery/rdnb-jewelry-1781020985156.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:0"></div>
         <div class="gal-ov">🔍</div>
       </div>
-      <div class="gal-item fade-up d2 fade-up d2" onclick="lb('Brainstorming Session','Brainstorming Session')">
+      <div class="gal-item fade-up d2" onclick="lb('🖼️','Brainstorming Session','')">
         <div class="gal-ph" style="background:linear-gradient(135deg,rgba(26,86,219,.2),rgba(124,58,237,.2))">🖼️</div>
         <div class="gal-ov">🔍</div>
       </div>
-      <div class="gal-item fade-up d3 fade-up d3" onclick="lb('Project Launch','Project Launch')">
+      <div class="gal-item fade-up d3" onclick="lb('🖼️','Project Launch','')">
         <div class="gal-ph" style="background:linear-gradient(135deg,rgba(26,86,219,.2),rgba(124,58,237,.2))">🖼️</div>
         <div class="gal-ov">🔍</div>
       </div>
-      <div class="gal-item tall fade-up d2 fade-up d4" onclick="lb('Award Ceremony','Award Ceremony')">
+      <div class="gal-item tall fade-up d4" onclick="lb('🖼️','Award Ceremony','')">
         <div class="gal-ph" style="background:linear-gradient(135deg,rgba(26,86,219,.2),rgba(124,58,237,.2))">🖼️</div>
         <div class="gal-ov">🔍</div>
       </div>
-      <div class="gal-item fade-up d3 fade-up d5" onclick="lb('Design Process','Design Process')">
+      <div class="gal-item fade-up d5" onclick="lb('🖼️','Design Process','')">
         <div class="gal-ph" style="background:linear-gradient(135deg,rgba(26,86,219,.2),rgba(124,58,237,.2))">🖼️</div>
         <div class="gal-ov">🔍</div>
       </div>
-      <div class="gal-item wide fade-up d4 fade-up d6" onclick="lb('Remote Work Bali','Remote Work Bali')">
+      <div class="gal-item wide fade-up d6" onclick="lb('🖼️','Remote Work Bali','')">
         <div class="gal-ph" style="background:linear-gradient(135deg,rgba(26,86,219,.2),rgba(124,58,237,.2))">🖼️</div>
         <div class="gal-ov">🔍</div>
       </div>
@@ -636,8 +641,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2.8rem 0
 <div class="lightbox" id="lightbox" onclick="closeLb(event)">
   <button class="lb-close" onclick="closeLb()">×</button>
   <div class="lb-box">
-    <div class="lb-icon" id="lb-icon">🖥️</div>
-    <p id="lb-cap" style="color:var(--text2);font-size:.9rem"></p>
+    <div id="lb-media"></div>
+    <div class="lb-info">
+      <div class="lb-title" id="lb-title"></div>
+      <div class="lb-desc" id="lb-desc"></div>
+    </div>
   </div>
 </div>
 
@@ -871,9 +879,18 @@ document.querySelectorAll('.flt-btn').forEach(btn=>{
 });
 
 // ── LIGHTBOX ──
-function lb(icon,cap){
-  document.getElementById('lb-icon').textContent=icon;
-  document.getElementById('lb-cap').textContent=cap;
+function lb(src,title,desc){
+  const media=document.getElementById('lb-media');
+  const isImg=src&&src.length>4&&!['🖥️','💡','🎯','🏆','🎨','🌏','🖼️'].includes(src);
+  if(isImg){
+    media.className='lb-img-wrap';
+    media.innerHTML=`<img src="${src}" alt="${title}">`;
+  } else {
+    media.className='lb-emoji-wrap';
+    media.textContent=src||'🖼️';
+  }
+  document.getElementById('lb-title').textContent=title||'';
+  document.getElementById('lb-desc').textContent=desc||'';
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow='hidden';
 }

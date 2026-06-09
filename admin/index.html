@@ -407,8 +407,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <img id="galPhotoPreview" class="hidden" style="width:100%;max-height:200px;object-fit:cover;border-radius:10px;margin-top:.75rem" src="" alt="">
     </div>
     <div class="form-group">
-      <label>Caption / Judul Foto</label>
-      <input type="text" id="galCaption" placeholder="contoh: Workspace Setup">
+      <label>Judul Foto</label>
+      <input type="text" id="galCaption" placeholder="contoh: RDNB Jewelry Store Opening">
+    </div>
+    <div class="form-group">
+      <label>Deskripsi / Keterangan Foto</label>
+      <textarea id="galDesc" placeholder="contoh: Ini saat kami berhasil membuka toko pertama kami di Bali..." style="min-height:80px"></textarea>
     </div>
     <div class="form-group">
       <label>Ukuran di Grid</label>
@@ -980,17 +984,21 @@ let galleryItems = [];
 
 function parseGallery(html){
   const items = [];
-  const re = /<div class="gal-item([^"]*)" onclick="lb\('([^']*)','([^']*)'\)">([\s\S]*?)<\/div>\s*<\/div>/g;
+  const re = /<div class="gal-item([^"]*)" onclick="lb\('([^']*)','([^']*)'(?:,'([^']*)')?\)">([\s\S]*?)<\/div>\s*<\/div>/g;
   let m;
   while((m = re.exec(html)) !== null){
-    const classes = m[1].trim();
+    const rawClasses = m[1].trim();
+    // deduplicate classes (fix "fade-up d2 fade-up d2" bug)
+    const classes = [...new Set(rawClasses.split(/\s+/))].filter(c=>c&&c!=='fade-up').join(' ');
     const caption = m[3];
-    const inner   = m[4];
-    const imgMatch = inner.match(/src="([^"]+)"/);
-    const emojiMatch = inner.match(/font-size:[^>]+>([^<]+)</);
+    const desc    = (m[4]||'').replace(/&#39;/g,"'");
+    const inner   = m[5];
+    const imgMatch  = inner.match(/src="([^"]+)"/);
+    const emojiMatch= inner.match(/font-size:[^>]+>([^<]+)</);
     items.push({
       classes,
       caption,
+      desc,
       img: imgMatch ? imgMatch[1] : null,
       emoji: !imgMatch && emojiMatch ? emojiMatch[1].trim() : '🖼️',
     });
@@ -1038,6 +1046,7 @@ function openAddGalleryModal(){
   document.getElementById('galleryModalTitle').textContent = '🖼️ Tambah Foto Gallery';
   document.getElementById('galPhotoFile').value = '';
   document.getElementById('galCaption').value = '';
+  document.getElementById('galDesc').value = '';
   document.getElementById('galSize').value = '';
   document.getElementById('galEditIndex').value = '';
   document.getElementById('galPhotoPreview').classList.add('hidden');
@@ -1051,6 +1060,7 @@ function openEditGalleryModal(idx){
   const item = galleryItems[idx];
   document.getElementById('galleryModalTitle').textContent = '✏️ Edit Foto Gallery';
   document.getElementById('galCaption').value = item.caption;
+  document.getElementById('galDesc').value = item.desc || '';
   document.getElementById('galSize').value = item.classes.replace('fade-up','').trim();
   document.getElementById('galEditIndex').value = idx;
   document.getElementById('saveGalBtn').textContent = '💾 Simpan Perubahan';
@@ -1082,13 +1092,14 @@ function previewGalPhoto(input){
 
 async function saveGalleryItem(){
   const caption  = document.getElementById('galCaption').value.trim();
+  const desc     = document.getElementById('galDesc').value.trim();
   const sizeVal  = document.getElementById('galSize').value;
   const editIdx  = document.getElementById('galEditIndex').value;
   const fileInput= document.getElementById('galPhotoFile');
   const file     = fileInput.files[0];
   const isEdit   = editIdx !== '';
 
-  if(!caption){ toast('Caption wajib diisi','error'); return; }
+  if(!caption){ toast('Judul wajib diisi','error'); return; }
 
   loading(true, 'Menyimpan foto gallery...');
   try {
@@ -1107,7 +1118,7 @@ async function saveGalleryItem(){
     }
 
     const classes = sizeVal ? sizeVal : '';
-    const newItem = { classes, caption, img: imgPath, emoji: '🖼️' };
+    const newItem = { classes, caption, desc, img: imgPath, emoji: '🖼️' };
 
     if(isEdit){
       galleryItems[parseInt(editIdx)] = newItem;
@@ -1146,8 +1157,10 @@ async function writeGalleryToIndex(){
     const inner = item.img
       ? `<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;border-radius:0">`
       : item.emoji;
-    const bg = item.img ? 'padding:0' : 'background:linear-gradient(135deg,rgba(26,86,219,.2),rgba(124,58,237,.2))';
-    return `      <div class="gal-item${sizeClasses} fade-up ${d}" onclick="lb('${item.caption}','${item.caption}')">\n        <div class="gal-ph" style="${bg}">${inner}</div>\n        <div class="gal-ov">🔍</div>\n      </div>`;
+    const bg  = item.img ? 'padding:0' : 'background:linear-gradient(135deg,rgba(26,86,219,.2),rgba(124,58,237,.2))';
+    const src = item.img ? item.img : (item.emoji||'🖼️');
+    const descEsc = (item.desc||'').replace(/'/g,"&#39;");
+    return `      <div class="gal-item${sizeClasses} fade-up ${d}" onclick="lb('${src}','${item.caption}','${descEsc}')">\n        <div class="gal-ph" style="${bg}">${inner}</div>\n        <div class="gal-ov">🔍</div>\n      </div>`;
   }).join('\n');
 
   html = html.replace(
